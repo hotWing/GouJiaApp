@@ -1150,7 +1150,10 @@ namespace GouJiaApp
 
             if ("嘉宝莉".Equals(material.brand))
             {
-                rule = getVarnishRule("嘉宝莉", material.dimension, material.checker, material.idiQuantity);
+                if ("WMF03-035-0015".Equals(material.id))
+                    rule = string.Format("ROUNDUP({0}*2.55/18,0)", "D" + curRow);
+                else 
+                    rule = getVarnishRule("嘉宝莉", material.dimension, material.checker, material.idiQuantity);
             }
 
             if ("片".Equals(material.unit) || "卷".Equals(material.unit))
@@ -1181,8 +1184,8 @@ namespace GouJiaApp
                 //    cell.RowHeight = 110;
 
                 Image image = Image.FromFile(imgLocalPath);
-                ws.Shapes.AddPicture(imgLocalPath, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 12, cell.Top + 5 + curRow * 0.45, 100, 100);
-                //ws.Shapes.AddPicture(imgLocalPath, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 12, cell.Top + 5, 100, 100);
+                //ws.Shapes.AddPicture(imgLocalPath, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 12, cell.Top + 5 + curRow * 0.45, 100, 100);
+                ws.Shapes.AddPicture(imgLocalPath, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 12, cell.Top + 5, 100, 100);
 
                 cell.Value = "";
             }
@@ -1599,11 +1602,7 @@ namespace GouJiaApp
         {
             if (name != null)
             {
-                if ("WMF03-035-0015".Equals(id))
-                {
-                    return "ROUNDUP(Q*2.55/18,0)";
-                }
-                else if (name.Contains("瓷片") || name.Contains("墙砖") || name.Contains("抛釉砖"))
+                if (name.Contains("瓷片") || name.Contains("墙砖") || name.Contains("抛釉砖"))
                 {
                     if (unit != null && unit.Contains("片"))
                     {
