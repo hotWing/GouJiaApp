@@ -1,4 +1,5 @@
-﻿using GouJiaApp.Utils;
+﻿using Aliyun.OSS;
+using GouJiaApp.Utils;
 using Microsoft.Office.Interop.Excel;
 using Newtonsoft.Json.Linq;
 using System;
@@ -12,9 +13,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Aliyun.OSS.Common;
-using Aliyun.OSS.Util;
-using Aliyun.OSS;
 
 namespace GouJiaApp
 {
@@ -121,38 +119,37 @@ namespace GouJiaApp
             //yimaoguiKeys.Add("衣帽间");
 
             fucaiOrder = new List<string>();
-            temp = "地漏、乳胶漆、墙面漆、底漆、瓷片、抛釉砖、防滑砖、仿古砖、中央空调、提升泵、地暖".Split('、');
+            temp = "地漏、乳胶漆、墙面漆、底漆、基础漆、瓷片、抛釉砖、防滑砖、仿古砖、瓷砖、中央空调、提升泵、外机、内机、地暖、壁挂炉".Split('、');
             fucaiOrder.AddRange(temp);
 
             zhucaiOrder = new List<string>();
-            temp = ("台面、水晶之恋、香格里拉、立木星、春意俏、小荷初露、福寿绵绵、水槽、龙头、台盆、台下盆、马桶、坐便器、座便器、小便、蹲便、拖把池、马桶喷枪、花洒、淋浴凳、"
-                + "置物架、卫浴四件套、厕纸架、浴巾架、毛巾架、五金配件、三角阀、双用角阀、地排下水管、入墙式墙排下水管、墙排下水管、翻盖式脸盆下水、软管、波纹管、洗衣机柜、洗衣机柜龙头、浴室柜、镜柜、镜框、"
+            temp = ("台面、水晶之恋、香格里拉、立木星、春意俏、小荷初露、福寿绵绵、橱柜、调味篮、防滑垫、刀叉盘、碗篮、锅篮、帮滑轨、水槽、龙头、台盆、台下盆、马桶、坐便器、座便器、小便、蹲便、拖把池、马桶喷枪、花洒、淋浴凳、"
+                + "置物架、卫浴四件套、厕纸架、浴巾架、毛巾架、单杆巾架、毛巾环、五金配件、三角阀、双用角阀、地排下水管、入墙式墙排下水管、墙排下水管、翻盖式脸盆下水、软管、波纹管、洗衣机柜、洗衣机柜龙头、浴室柜、镜柜、镜框、"
                 + "防雾膜、晾衣机、单开门、双移门、单移门、厨房移门、书房移门、单开移门、单开玻璃门、单边套、半边套、踢脚线、哑口套、免漆、双扇移门、门连套、整门、背景墙、暗门、墙背景木饰面、隔断、隔断木饰面、隐门、门锁、把手、碰吸、门吸、闭门器、合页、"
-                + "挖手、轨道、吊轮、吊轨、三节轨、地板、实木地板、实木复合地板、玄关、玄关柜、展示柜、开门柜、开门衣柜、移门柜、移门衣柜、书柜、电视柜、"
-                + "阳台柜、阳台吊柜、阳台地柜、酒柜、嵌条、储藏柜、非标、射灯、筒灯、阅读灯、调光变压器、吸顶灯、指示灯、支架、LED、t5、灯带、小夜灯、感应灯、开关、插座、空白盖板、"
+                + "挖手、轨道、吊轮、吊轨、三节轨、地板、实木地板、实木复合地板、玄关、玄关柜、展示柜、开门柜、开门衣柜、移门柜、移门衣柜、衣帽间、衣柜、书柜、电视柜、"
+                + "阳台柜、阳台吊柜、阳台地柜、酒柜、嵌条、储藏柜、储物柜、非标、榻榻米、隔板、射灯、筒灯、阅读灯、调光变压器、吸顶灯、指示灯、支架、LED、t5、灯带、小夜灯、感应灯、开关、插座、空白盖板、"
                 + "吊顶、集成吊顶、浴霸、换气扇、凉霸、集成照明、油烟机、灶具、消毒柜、热水器、微波炉、小厨宝、净水器、垃圾处理器、壁纸、硬包").Split('、');
             zhucaiOrder.AddRange(temp);
 
             ruanzhuangOrder = new List<string>();
             temp = ("三人沙发、三人位沙发、三位沙发、3人沙发、双人沙发、双人位沙发、二人沙发、双位沙发、2人沙发、单人沙发、单人位沙发、1人沙发、单人左扶手、单人右扶手、无扶手单人沙发、转角沙发、L沙发、L沙发（左躺）、L沙发（右躺）、沙发、家具、休闲椅、单椅、脚踏、茶几、边几、角几、圆几、大方几、小方几、椭圆几、"
-                + "吧台、电视柜、五斗柜、酒柜、餐桌、圆桌、餐台、餐椅、餐边柜、备餐柜、床、床尾凳、床头柜、高低铺、衣柜、书桌、书台、写字台、书椅、扶手椅、椅子、"
-                + "凳、榻、书架、书柜、玄关桌、玄关柜、边柜、鞋柜、柜子、梳妆凳、妆椅、妆台、梳妆镜、屏风、储物柜、装饰柜、升降椅、吊灯、吸顶灯、台灯、灯具、落地灯、窗帘、布拉帘、地毯、挂画、装饰画、床品、"
+                + "吧台、电视柜、五斗柜、酒柜、餐桌、圆桌、餐台、餐椅、餐边柜、备餐柜、床、排骨架、床尾凳、床头柜、高低铺、衣柜、书桌、书台、写字台、书椅、扶手椅、椅子、"
+                + "凳、榻、书架、书柜、玄关桌、玄关柜、边柜、鞋柜、柜子、梳妆凳、妆椅、妆台、梳妆镜、妆镜、屏风、储物柜、装饰柜、升降椅、吊灯、吸顶灯、壁灯、台灯、灯具、落地灯、窗帘、布拉帘、布百叶、地毯、挂画、装饰画、床品、"
                 + "床垫、冰箱、电冰箱、洗衣机、电视、烤箱、分体挂机、分体柜机").Split('、');
             ruanzhuangOrder.AddRange(temp);
 
             zigouOrder = new List<string>();
-            temp = ("淋浴房、浴室柜台面、台面、门套柱脚、脚座、布朗布、门槛石、新埃及米黄、挡水条、T5灯管、t5  14W 支架、电线、网线、电话线、水管、线管、石膏板、多层板、石材板、集成板、防水浆料、腻子").Split('、');
+            temp = ("止逆阀、淋浴房、浴室柜台面、台面、门套柱脚、脚座、布朗布、大理石、门槛石、新埃及米黄、挡水条、T5灯管、t5  14W 支架、不锈钢条、电线、网线、双绞线、电缆、电话线、BV2.5、水管、线管、石膏板、多层板、石材板、集成板、防水浆料、腻子、砂浆、瓷砖胶、界面剂、石膏").Split('、');
             zigouOrder.AddRange(temp);
 
             daidingOrder = new List<string>();
-            //temp = ("").Split('、');
             daidingOrder.Add("橱柜");
 
             hilightKeys = new List<string>();
             temp = ("墙面漆、底漆、踢脚线、把手、顶线-封板").Split('、');
             hilightKeys.AddRange(temp);
 
-            Q20kg_JBL = new Dictionary<string, double>();
+            
         }
 
         private void idiTextBox_Click(object sender, EventArgs e)
@@ -216,23 +213,25 @@ namespace GouJiaApp
                 return;
             }
 
+            Q20kg_JBL = new Dictionary<string, double>();
+
             generate();
 
-            //try
-            //{
-            //    if (!client.DoesBucketExist(bucketName))
-            //    {
-            //        MessageBox.Show("bucket idiplugin 不存在！");
-            //        return;
-            //    }
-            //    string savePath = pathTextBox.Text + @"\" + nameTextBox.Text + ".xlsx";
-            //    client.PutObject(bucketName, "物料单/" + nameTextBox.Text + ".xlsx", savePath);
+            try
+            {
+                if (!client.DoesBucketExist(bucketName))
+                {
+                    MessageBox.Show("bucket idiplugin 不存在！");
+                    return;
+                }
+                string savePath = pathTextBox.Text + @"\" + nameTextBox.Text + ".xlsx";
+                client.PutObject(bucketName, "物料单/" + nameTextBox.Text + ".xlsx", savePath);
 
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message);
-            //}
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
             MessageBox.Show("完成");
         }
 
@@ -425,7 +424,7 @@ namespace GouJiaApp
                     //通过web service 获得详细信息
                     try
                     {
-                        HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create("http://ges.goujiawang.com/matter/getMatterByCode?code=" + criteria);
+                        HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create("http://ges.goujiawang.com/matter/getMatterByCodeV2?code=" + criteria);
                         //HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create("http://rges.goujiawang.com/matter/getMatterByCode?code=" + criteria);
                         request.Timeout = 10000;
                         request.ContentType = "application/json; charset=utf-8";
@@ -461,33 +460,27 @@ namespace GouJiaApp
 
                             if (wsNum == 0)
                             {
-                                if (JTokenIsNullOrEmpty(jObj["result"]["useNature"])
-                               || JTokenIsNullOrEmpty(jObj["result"]["useNature"]["text"]))
+                                if (JTokenIsNullOrEmpty(jObj["result"]["useNatureText"]))
                                     wsNum = 6;
                                 else
-                                    wsNum = getPackageWorkSheetNumByUseNature((string)jObj["result"]["useNature"]["text"]);
+                                    wsNum = getPackageWorkSheetNumByUseNature((string)jObj["result"]["useNatureText"]);
                             }
 
                             switch (wsNum)
                             {
                                 case 2:
-                                    //insertRow(ws2, curRow2, criteria, roomsSB.ToString(), sum, idiUnit, jObj);
                                     addRowToList(criteria, roomsSB.ToString(), sum, idiUnit, jObj, ref materials2);
                                     break;
                                 case 3:
-                                    //insertRow(ws3, curRow3, criteria, roomsSB.ToString(), sum, idiUnit, jObj);
                                     addRowToList(criteria, roomsSB.ToString(), sum, idiUnit, jObj, ref materials3);
                                     break;
                                 case 4:
-                                    //insertRow(ws4, curRow4, criteria, roomsSB.ToString(), sum, idiUnit, jObj);
                                     addRowToList(criteria, roomsSB.ToString(), sum, idiUnit, jObj, ref materials4);
                                     break;
                                 case 5:
-                                    //insertRow(ws5, curRow5, criteria, roomsSB.ToString(), sum, idiUnit, jObj);
                                     addRowToList(criteria, roomsSB.ToString(), sum, idiUnit, jObj, ref materials5);
                                     break;
                                 case 6:
-                                    //insertRow(ws6, curRow6, criteria, roomsSB.ToString(), sum, idiUnit, jObj);
                                     addRowToList(criteria, roomsSB.ToString(), sum, idiUnit, jObj, ref materials6);
                                     break;
                                 //case 7:
@@ -618,6 +611,7 @@ namespace GouJiaApp
                 cell.Font.Size = 24;
 
                 ws1.Range[ws1.Cells[12, 5], ws1.Cells[37, 6]].HorizontalAlignment = XlHAlign.xlHAlignCenter;
+                ws1.Range[ws1.Cells[12, 5], ws1.Cells[37, 6]].NumberFormat = "0.00";
                 //System.Reflection.Assembly CurrAssembly = System.Reflection.Assembly.LoadFrom(System.Windows.Forms.Application.ExecutablePath);
                 //System.IO.Stream stream = CurrAssembly.GetManifestResourceStream("GouJiaApp.Resources.logo_sm.png");
                 //string temp = System.IO.Path.GetTempFileName();
@@ -765,7 +759,7 @@ namespace GouJiaApp
                 ws1.Cells[12, 4] = "辅材包";
 
                 ws1.Range[ws1.Cells[12, 5], ws1.Cells[15, 5]].Merge();
-                ws1.Cells[12, 5] = string.Format("='辅材包'!S{0}", ws2.UsedRange.Rows.Count);
+                ws1.Cells[12, 5] = string.Format("=SUM(辅材包!S{0}:辅材包!S{1})",4,ws2.UsedRange.Rows.Count);
 
                 //ws1.Range[ws1.Cells[7, 5], ws1.Cells[10, 5]].Merge();
                 //ws1.Range[ws1.Cells[7, 6], ws1.Cells[10, 6]].Merge();
@@ -811,8 +805,7 @@ namespace GouJiaApp
                 ws1.Cells[16, 4] = "主材包";
 
                 ws1.Range[ws1.Cells[16, 5], ws1.Cells[28, 5]].Merge();
-                ws1.Cells[16, 5] = string.Format("='主材包'!S{0}", ws3.UsedRange.Rows.Count);
-
+                ws1.Cells[16, 5] = string.Format("=SUM(主材包!S{0}:主材包!S{1})", 4, ws3.UsedRange.Rows.Count);
                 //ws1.Range[ws1.Cells[11, 5], ws1.Cells[23, 5]].Merge();
                 //ws1.Range[ws1.Cells[11, 6], ws1.Cells[23, 6]].Merge();
                 //ws1.Range[ws1.Cells[11, 7], ws1.Cells[23, 7]].Merge();
@@ -845,8 +838,7 @@ namespace GouJiaApp
                 ws1.Cells[29, 4] = "软装包";
 
                 ws1.Range[ws1.Cells[29, 5], ws1.Cells[33, 5]].Merge();
-                ws1.Cells[29, 5] = string.Format("='软装包'!S{0}", ws4.UsedRange.Rows.Count);
-
+                ws1.Cells[29, 5]= string.Format("=SUM(软装包!S{0}:软装包!S{1})", 4, ws4.UsedRange.Rows.Count);
                 //ws1.Range[ws1.Cells[24, 5], ws1.Cells[28, 5]].Merge();
                 //ws1.Range[ws1.Cells[24, 6], ws1.Cells[28, 6]].Merge();
                 //ws1.Range[ws1.Cells[24, 7], ws1.Cells[28, 7]].Merge();
@@ -876,7 +868,7 @@ namespace GouJiaApp
                 ws1.Cells[34, 4] = "城运商自购";
 
                 ws1.Range[ws1.Cells[34, 5], ws1.Cells[37, 5]].Merge();
-                ws1.Cells[34, 5] = string.Format("='城运商自购'!S{0}", ws5.UsedRange.Rows.Count);
+                ws1.Cells[34, 5] = string.Format("=SUM(城运商自购!S{0}:城运商自购!S{1})", 4, ws5.UsedRange.Rows.Count);
 
                 //物流费
                 ws1.Range[ws1.Cells[12, 6], ws1.Cells[33, 6]].Merge();
@@ -888,6 +880,7 @@ namespace GouJiaApp
                 ws1.Range[ws1.Cells[38, 2], ws1.Cells[38, 4]].Merge();
                 ws1.Cells[38, 2] = "合计";
                 ws1.Range[ws1.Cells[38, 5], ws1.Cells[38, 6]].Merge();
+                ws1.Cells[38, 5].NumberFormat = "0.00";
                 ws1.Cells[38, 5] = "=E12+E16+E29+F12";
                 ////软装包
                 //ws1.Range[ws1.Cells[29, 1], ws1.Cells[29, 13]].HorizontalAlignment = XlHAlign.xlHAlignCenter;
@@ -956,396 +949,7 @@ namespace GouJiaApp
 
                 #endregion
 
-                #region 手动增加
-                //int startRow = curRow9;
-                //System.Reflection.Assembly CurrAssembly = System.Reflection.Assembly.LoadFrom(System.Windows.Forms.Application.ExecutablePath);
-                //Stream stream = CurrAssembly.GetManifestResourceStream("GouJiaApp.Resources.11.png");
-                //string temp = System.IO.Path.GetTempFileName();
-                //Image.FromStream(stream).Save(temp);
-                //writeRowManual(ws9, curRow9++, "WMZ19-035-0031", "", "", "", "优天然抗菌防霉360墙面漆", "桶", "84", "158", "嘉宝莉", "KRM3723", "6.4KG", "1.00", "", "", temp);
-                //stream.Close();
-
-                //stream = CurrAssembly.GetManifestResourceStream("GouJiaApp.Resources.22.png");
-                //temp = System.IO.Path.GetTempFileName();
-                //Image.FromStream(stream).Save(temp);
-                //writeRowManual(ws9, curRow9++, "WMZ19-035-0004", "", "", "", "优倍涂净味防霉3合1墙面漆（可调色）", "桶", "100", "248", "嘉宝莉", "面漆", "6.4KG/桶", "1.00", "", "中国国产油漆第一品牌，工厂源头发货，绝对无假货；采用核壳乳液聚合技术，VOC含量远低于国标，环保系数达欧洲水平。", temp);
-                //stream.Close();
-
-                //stream = CurrAssembly.GetManifestResourceStream("GouJiaApp.Resources.33.png");
-                //temp = System.IO.Path.GetTempFileName();
-                //Image.FromStream(stream).Save(temp);
-                //writeRowManual(ws9, curRow9, "WMZ19-035-0030", "", "", "", "优天然净味抗碱底漆", "桶", "67", "128", "嘉宝莉", "KRD271", "6KG", "1.00", "", "", temp);
-                //stream.Close();
-                //int endRow = curRow9;
-
-                //ws9.Range[ws9.Cells[startRow, 1], ws9.Cells[endRow, 19]].Interior.Color = System.Drawing.Color.FromArgb(240, 240, 240);
-                //ws9.Range[ws9.Cells[startRow, 16], ws9.Cells[endRow, 16]].Interior.Color = System.Drawing.Color.FromArgb(255, 242, 204);
-
-                //cell = ws7.Range[ws7.Cells[3, 1], ws7.Cells[12, 19]];
-                //borders = cell.Borders;
-                //borders.LineStyle = XlLineStyle.xlDot;
-                //borders.Weight = XlBorderWeight.xlHairline;
-
-
-
-                //initWorkSheet(ws7, "手动增加清单");
-                //ws7.Range[ws7.Cells[3, 1], ws7.Cells[12, 19]].WrapText = true;
-                ////统一添加数量 
-                //ws7.Range[ws7.Cells[3, 7], ws7.Cells[12, 7]] = 0;
-
-                //#region 现代橱柜
-
-                //cell = ws7.Range[ws7.Cells[3, 1], ws7.Cells[5, 19]];
-                //borders = cell.Borders;
-                //borders[XlBordersIndex.xlEdgeBottom].LineStyle = XlLineStyle.xlContinuous;
-                //borders[XlBordersIndex.xlEdgeBottom].Weight = XlBorderWeight.xlThin;
-                //borders[XlBordersIndex.xlEdgeLeft].LineStyle = XlLineStyle.xlContinuous;
-                //borders[XlBordersIndex.xlEdgeLeft].Weight = XlBorderWeight.xlThin;
-                //borders[XlBordersIndex.xlEdgeRight].LineStyle = XlLineStyle.xlContinuous;
-                //borders[XlBordersIndex.xlEdgeRight].Weight = XlBorderWeight.xlThin;
-
-                //ws7.Rows[3].RowHeight = 46;
-                //ws7.Rows[4].RowHeight = 46;
-                //ws7.Rows[5].RowHeight = 53;
-
-                //ws7.Range[ws7.Cells[3, 1], ws7.Cells[5, 1]].Merge();
-
-                //ws7.Range[ws7.Cells[3, 2], ws7.Cells[5, 2]].Merge();
-                //cell = ws7.Cells[3, 2];
-                //cell.Value = "现代橱柜";
-
-                //ws7.Range[ws7.Cells[3, 3], ws7.Cells[5, 3]].Merge();
-                //cell = ws7.Cells[3, 3];
-                //cell.Value = "厨房";
-
-                //ws7.Cells[3, 6] = "隔板吊柜";
-                //ws7.Cells[4, 6] = "隔板地柜";
-                //ws7.Cells[5, 6] = "电器高柜";
-
-                //ws7.Cells[3, 8] = "延米";
-                //ws7.Cells[4, 8] = "延米";
-                //ws7.Cells[5, 8] = "延米";
-
-                //ws7.Cells[3, 10] = 800;
-                //ws7.Cells[4, 10] = 400;
-                //ws7.Cells[5, 10] = 3000;
-
-                //ws7.Cells[3, 11] = 1300;
-                //ws7.Cells[4, 11] = 650;
-                //ws7.Cells[5, 11] = 4670;
-
-                //w7Total(ws7, 3);
-                //w7Total(ws7, 4);
-                //w7Total(ws7, 5);
-
-                //ws7.Range[ws7.Cells[3, 14], ws7.Cells[5, 14]].Merge();
-                //cell = ws7.Cells[3, 14];
-                //cell.Value = "橱柜专供";
-
-                //ws7.Range[ws7.Cells[3, 15], ws7.Cells[5, 15]].Merge();
-                //cell = ws7.Cells[3, 15];
-                //cell.Value = "白色高光GY9010/橡木-瑞格森工7025WG/黑檀 NK8608；白色高光GY9010";
-
-                //ws7.Range[ws7.Cells[3, 16], ws7.Cells[5, 16]].Merge();
-                //cell = ws7.Cells[3, 16];
-                //cell.Value = "现场尺寸详见附件CAD";
-
-                //ws7.Cells[3, 17] = "白色高光GY9010";
-                //ws7.Cells[4, 17] = "橡木-瑞格森工/7025WG";
-                //ws7.Cells[5, 17] = "黑檀 NK8608；白色高光GY9010";
-                //ws7.Range[ws7.Cells[3, 17], ws7.Cells[5, 17]].VerticalAlignment = XlVAlign.xlVAlignTop;
-                //ws7.Range[ws7.Cells[3, 17], ws7.Cells[5, 17]].Font.Size = 8;
-
-                //ws7.Range[ws7.Cells[3, 18], ws7.Cells[5, 18]].Merge();
-                //cell = ws7.Cells[3, 18];
-                //cell.Font.Color = System.Drawing.Color.FromArgb(255, 0, 0);
-                //cell.Font.Bold = true;
-                //cell.Value = "1.橱柜标配有吊柜、水槽柜、电器柜、抽屉柜、调味拉篮；\n2.标配为橡木色、白色高光、黑檀色或者深色造型门板，可增配进口橱柜，详见【现代-X系增配清单；\n3.橱柜五金详见《五金附件清单【标配】》，增配五金详见《五金附件清单【增配】》。";
-
-                //ws7.Range[ws7.Cells[3, 19], ws7.Cells[5, 19]].Merge();
-                //cell = ws7.Cells[3, 19];
-                //cell.Value = "选用大亚E0级柜体板，已通过最严格的F★★★★级环保监测，确保为健康环保的板材。";
-
-                ////参考图片
-                //ws7.Range[ws7.Cells[3, 9], ws7.Cells[5, 9]].Merge();
-                //cell = ws7.Cells[3, 9];
-                //System.Reflection.Assembly CurrAssembly = System.Reflection.Assembly.LoadFrom(System.Windows.Forms.Application.ExecutablePath);
-                //Stream stream = CurrAssembly.GetManifestResourceStream("GouJiaApp.Resources.ws7-1.png");
-                //string temp = System.IO.Path.GetTempFileName();
-                //Image.FromStream(stream).Save(temp);
-                //ws7.Shapes.AddPicture(temp, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 12, cell.Top + 5, -1, -1);
-
-                //cell = ws7.Cells[3, 17];
-
-                //stream = CurrAssembly.GetManifestResourceStream("GouJiaApp.Resources.ws7-white.png");
-                //temp = System.IO.Path.GetTempFileName();
-                //Image.FromStream(stream).Save(temp);
-                //ws7.Shapes.AddPicture(temp, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 25, cell.Top + 16, -1, -1);
-
-                //cell = ws7.Cells[5, 17];
-                //ws7.Shapes.AddPicture(temp, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 8, cell.Top + 20, -1, -1);
-
-                //cell = ws7.Cells[4, 17];
-                //stream = CurrAssembly.GetManifestResourceStream("GouJiaApp.Resources.ws7-brown.png");
-                //temp = System.IO.Path.GetTempFileName();
-                //Image.FromStream(stream).Save(temp);
-                //ws7.Shapes.AddPicture(temp, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 25, cell.Top + 16, -1, -1);
-
-                //cell = ws7.Cells[5, 17];
-                //stream = CurrAssembly.GetManifestResourceStream("GouJiaApp.Resources.ws7-black.png");
-                //temp = System.IO.Path.GetTempFileName();
-                //Image.FromStream(stream).Save(temp);
-                //ws7.Shapes.AddPicture(temp, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 52, cell.Top + 20, -1, -1);
-                //#endregion
-
-                //#region 欧式橱柜
-
-                //cell = ws7.Range[ws7.Cells[6, 1], ws7.Cells[8, 19]];
-                //borders = cell.Borders;
-                //borders[XlBordersIndex.xlEdgeBottom].LineStyle = XlLineStyle.xlContinuous;
-                //borders[XlBordersIndex.xlEdgeBottom].Weight = XlBorderWeight.xlThin;
-                //borders[XlBordersIndex.xlEdgeLeft].LineStyle = XlLineStyle.xlContinuous;
-                //borders[XlBordersIndex.xlEdgeLeft].Weight = XlBorderWeight.xlThin;
-                //borders[XlBordersIndex.xlEdgeRight].LineStyle = XlLineStyle.xlContinuous;
-                //borders[XlBordersIndex.xlEdgeRight].Weight = XlBorderWeight.xlThin;
-
-                //ws7.Rows[6].RowHeight = 46;
-                //ws7.Rows[7].RowHeight = 46;
-                //ws7.Rows[8].RowHeight = 46;
-
-                //ws7.Range[ws7.Cells[6, 1], ws7.Cells[8, 1]].Merge();
-
-                //ws7.Range[ws7.Cells[6, 2], ws7.Cells[8, 2]].Merge();
-                //cell = ws7.Cells[6, 2];
-                //cell.Value = "欧式橱柜";
-
-                //ws7.Range[ws7.Cells[6, 3], ws7.Cells[8, 3]].Merge();
-                //cell = ws7.Cells[6, 3];
-                //cell.Value = "厨房";
-
-                //ws7.Cells[6, 6] = "电器高柜";
-                //ws7.Cells[7, 6] = "隔板吊柜";
-                //ws7.Cells[8, 6] = "隔板地柜";
-
-                //ws7.Cells[6, 8] = "套";
-                //ws7.Cells[7, 8] = "延米";
-                //ws7.Cells[8, 8] = "延米";
-
-                //ws7.Cells[6, 10] = 3200;
-                //ws7.Cells[7, 10] = 450;
-                //ws7.Cells[8, 10] = 880;
-
-                //ws7.Cells[6, 11] = 4970;
-                //ws7.Cells[7, 11] = 700;
-                //ws7.Cells[8, 11] = 1400;
-
-                //w7Total(ws7, 6);
-                //w7Total(ws7, 7);
-                //w7Total(ws7, 8);
-
-                //ws7.Range[ws7.Cells[6, 14], ws7.Cells[8, 14]].Merge();
-                //cell = ws7.Cells[8, 14];
-                //cell.Value = "翊菲/DTC/艾博";
-
-                //ws7.Range[ws7.Cells[6, 15], ws7.Cells[8, 15]].Merge();
-                //cell = ws7.Cells[6, 15];
-                //cell.Value = "门型ANS3207；膜YH201\n门型ANS3207；膜YT024";
-
-                //ws7.Range[ws7.Cells[6, 16], ws7.Cells[8, 16]].Merge();
-                //cell = ws7.Cells[6, 16];
-                //cell.Value = "现场尺寸详见附件CAD";
-
-                //ws7.Cells[6, 17] = "门型ANS3207\n膜YH201";
-                //ws7.Cells[7, 17] = "门型ANS3207\n膜YH201                                                           ";
-                //ws7.Range[ws7.Cells[6, 17], ws7.Cells[8, 17]].VerticalAlignment = XlVAlign.xlVAlignTop;
-                //ws7.Range[ws7.Cells[6, 17], ws7.Cells[8, 17]].Font.Size = 8;
-
-                //ws7.Range[ws7.Cells[6, 18], ws7.Cells[8, 18]].Merge();
-                //cell = ws7.Cells[6, 18];
-                //cell.Font.Color = System.Drawing.Color.FromArgb(255, 0, 0);
-                //cell.Font.Bold = true;
-                //cell.Value = "1.橱柜标配有吊柜、水槽柜、电器柜、抽屉柜、调味拉篮；\n2.标配为白色及樱桃木色，可增配进口橱柜，详见【欧式-J系增配清单】；\n3.橱柜五金详见《五金附件清单【标配】》，增配五金详见《五金附件清单【增配】》。";
-                //ws7.Range[ws7.Cells[6, 19], ws7.Cells[8, 19]].Merge();
-                //cell = ws7.Cells[6, 19];
-                //cell.Value = "选用大亚E0级柜体板，已通过最严格的F★★★★级环保监测，是目前最健康环保的板材之一。";
-
-                ////参考图片
-                //ws7.Range[ws7.Cells[6, 9], ws7.Cells[8, 9]].Merge();
-                //cell = ws7.Cells[6, 9];
-                //CurrAssembly = System.Reflection.Assembly.LoadFrom(System.Windows.Forms.Application.ExecutablePath);
-                //stream = CurrAssembly.GetManifestResourceStream("GouJiaApp.Resources.ws7-2.png");
-                //temp = System.IO.Path.GetTempFileName();
-                //Image.FromStream(stream).Save(temp);
-                //ws7.Shapes.AddPicture(temp, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 12, cell.Top + 5, -1, -1);
-
-                //cell = ws7.Cells[6, 17];
-                //stream = CurrAssembly.GetManifestResourceStream("GouJiaApp.Resources.ws7-men1.png");
-                //temp = System.IO.Path.GetTempFileName();
-                //Image.FromStream(stream).Save(temp);
-                //ws7.Shapes.AddPicture(temp, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 60, cell.Top + 1, -1, -1);
-
-
-                //cell = ws7.Cells[7, 17];
-                //stream = CurrAssembly.GetManifestResourceStream("GouJiaApp.Resources.ws7-men2.png");
-                //temp = System.IO.Path.GetTempFileName();
-                //Image.FromStream(stream).Save(temp);
-                //ws7.Shapes.AddPicture(temp, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 60, cell.Top + 1, -1, -1);
-                //#endregion
-
-                //#region 中式橱柜
-
-                //cell = ws7.Range[ws7.Cells[9, 1], ws7.Cells[11, 19]];
-                //borders = cell.Borders;
-                //borders[XlBordersIndex.xlEdgeBottom].LineStyle = XlLineStyle.xlContinuous;
-                //borders[XlBordersIndex.xlEdgeBottom].Weight = XlBorderWeight.xlThin;
-                //borders[XlBordersIndex.xlEdgeLeft].LineStyle = XlLineStyle.xlContinuous;
-                //borders[XlBordersIndex.xlEdgeLeft].Weight = XlBorderWeight.xlThin;
-                //borders[XlBordersIndex.xlEdgeRight].LineStyle = XlLineStyle.xlContinuous;
-                //borders[XlBordersIndex.xlEdgeRight].Weight = XlBorderWeight.xlThin;
-
-                //ws7.Rows[9].RowHeight = 46;
-                //ws7.Rows[10].RowHeight = 46;
-                //ws7.Rows[11].RowHeight = 46;
-
-                //ws7.Range[ws7.Cells[9, 1], ws7.Cells[11, 1]].Merge();
-
-                //ws7.Range[ws7.Cells[9, 2], ws7.Cells[11, 2]].Merge();
-                //cell = ws7.Cells[9, 2];
-                //cell.Value = "中式橱柜";
-
-                //ws7.Range[ws7.Cells[9, 3], ws7.Cells[11, 3]].Merge();
-                //cell = ws7.Cells[9, 3];
-                //cell.Value = "厨房";
-
-                //ws7.Cells[9, 6] = "电器高柜";
-                //ws7.Cells[10, 6] = "隔板吊柜";
-                //ws7.Cells[11, 6] = "隔板地柜";
-
-                //ws7.Cells[9, 8] = "延米";
-                //ws7.Cells[10, 8] = "延米";
-                //ws7.Cells[11, 8] = "延米";
-
-                //ws7.Cells[9, 10] = 3000;
-                //ws7.Cells[10, 10] = 400;
-                //ws7.Cells[11, 10] = 800;
-
-                //ws7.Cells[9, 11] = 4670;
-                //ws7.Cells[10, 11] = 650;
-                //ws7.Cells[11, 11] = 1300;
-
-                //w7Total(ws7, 9);
-                //w7Total(ws7, 10);
-                //w7Total(ws7, 11);
-
-                //ws7.Range[ws7.Cells[9, 14], ws7.Cells[11, 14]].Merge();
-                //cell = ws7.Cells[9, 14];
-                //cell.Value = "橱柜专供";
-
-                //ws7.Range[ws7.Cells[9, 15], ws7.Cells[11, 15]].Merge();
-                //cell = ws7.Cells[9, 15];
-                //cell.Value = "黑檀 NK8608";
-
-                //ws7.Range[ws7.Cells[9, 16], ws7.Cells[11, 16]].Merge();
-                //cell = ws7.Cells[9, 16];
-                //cell.Value = "现场尺寸详见附件CAD";
-
-                //ws7.Range[ws7.Cells[9, 17], ws7.Cells[11, 17]].Merge();
-                //cell = ws7.Cells[9, 17];
-                //cell.Value = "\n黑檀 NK8608；白色高光GY9010  ";
-
-                //ws7.Range[ws7.Cells[9, 18], ws7.Cells[11, 18]].Merge();
-                //cell = ws7.Cells[9, 18];
-                //cell.Font.Color = System.Drawing.Color.FromArgb(255, 0, 0);
-                //cell.Font.Bold = true;
-                //cell.Value = "1.橱柜标配有吊柜、水槽柜、消毒柜、抽屉柜、调味拉篮；\n2.标配白色高光、黑檀色门板，可增配进口橱柜，详见【中式-Y系增配清单】；\n3.橱柜五金详见《五金附件清单【标配】》，增配五金详见《五金附件清单【增配】》。";
-
-                //ws7.Range[ws7.Cells[9, 19], ws7.Cells[11, 19]].Merge();
-                //cell = ws7.Cells[9, 19];
-                //cell.Value = "选用大亚E0级柜体板，已通过最严格的F★★★★级环保监测，是目前最健康环保的板材之一。";
-
-                ////参考图片
-                //ws7.Range[ws7.Cells[9, 9], ws7.Cells[11, 9]].Merge();
-                //cell = ws7.Cells[9, 9];
-                //CurrAssembly = System.Reflection.Assembly.LoadFrom(System.Windows.Forms.Application.ExecutablePath);
-                //stream = CurrAssembly.GetManifestResourceStream("GouJiaApp.Resources.ws7-3.png");
-                //temp = System.IO.Path.GetTempFileName();
-                //Image.FromStream(stream).Save(temp);
-                //ws7.Shapes.AddPicture(temp, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 12, cell.Top + 5, -1, -1);
-
-                //cell = ws7.Cells[9, 17];
-                //stream = CurrAssembly.GetManifestResourceStream("GouJiaApp.Resources.ws7-black.png");
-                //temp = System.IO.Path.GetTempFileName();
-                //Image.FromStream(stream).Save(temp);
-                //ws7.Shapes.AddPicture(temp, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 8, cell.Top + 35, -1, -1);
-
-                //stream = CurrAssembly.GetManifestResourceStream("GouJiaApp.Resources.ws7-white.png");
-                //temp = System.IO.Path.GetTempFileName();
-                //Image.FromStream(stream).Save(temp);
-                //ws7.Shapes.AddPicture(temp, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 52, cell.Top + 35, -1, -1);
-
-                //#endregion
-
-                //#region WN19
-
-                //cell = ws7.Range[ws7.Cells[12, 1], ws7.Cells[12, 19]];
-                //borders = cell.Borders;
-                //borders[XlBordersIndex.xlEdgeBottom].LineStyle = XlLineStyle.xlContinuous;
-                //borders[XlBordersIndex.xlEdgeBottom].Weight = XlBorderWeight.xlThin;
-                //borders[XlBordersIndex.xlEdgeLeft].LineStyle = XlLineStyle.xlContinuous;
-                //borders[XlBordersIndex.xlEdgeLeft].Weight = XlBorderWeight.xlThin;
-                //borders[XlBordersIndex.xlEdgeRight].LineStyle = XlLineStyle.xlContinuous;
-                //borders[XlBordersIndex.xlEdgeRight].Weight = XlBorderWeight.xlThin;
-
-                //ws7.Rows[12].RowHeight = 110;
-
-                //cell = ws7.Cells[12, 2];
-                //cell.Value = "WMZ19-035-0002";
-
-                //cell = ws7.Cells[12, 3];
-                //cell.Value = "全屋";
-
-                //ws7.Cells[12, 6] = "乳胶漆";
-
-                //ws7.Cells[12, 8] = "桶";
-
-                //ws7.Cells[12, 10] = 76;
-
-                //ws7.Cells[12, 11] = 198;
-
-                //w7Total(ws7, 12);
-
-                //cell = ws7.Cells[12, 14];
-                //cell.Value = "嘉宝莉";
-
-                //cell = ws7.Cells[12, 15];
-                //cell.Value = "优倍涂净味防霉3合1墙面漆";
-
-                //cell = ws7.Cells[12, 16];
-                //cell.Value = "6.4KG/桶";
-
-                //cell = ws7.Cells[12, 17];
-                //cell.Value = "面漆";
-
-
-                //cell = ws7.Cells[12, 18];
-                //cell.Font.Color = System.Drawing.Color.FromArgb(255, 0, 0);
-                //cell.Font.Bold = true;
-                //cell.Value = "1.需按照具体户型面积搭配两种乳胶漆；\n2.可等价替换可调色乳胶漆。";
-
-                //cell = ws7.Cells[12, 19];
-                //cell.Value = "中国国产油漆第一品牌，工厂源头发货，绝对无假货；采用核壳乳液聚合技术，VOC含量远低于国标，环保系数达欧洲水平。";
-
-                ////参考图片
-                //cell = ws7.Cells[12, 9];
-                //CurrAssembly = System.Reflection.Assembly.LoadFrom(System.Windows.Forms.Application.ExecutablePath);
-                //stream = CurrAssembly.GetManifestResourceStream("GouJiaApp.Resources.ws7-4.png");
-                //temp = System.IO.Path.GetTempFileName();
-                //Image.FromStream(stream).Save(temp);
-                //ws7.Shapes.AddPicture(temp, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 12, cell.Top + 5, -1, -1);
-                //#endregion
-
-                #endregion
-               // MessageBox.Show("转化完成！");
+                
                 ProgressBarController.setValue(progressBar, 0);
             }
             catch (Exception ex)
@@ -1428,32 +1032,32 @@ namespace GouJiaApp
                 }
             }
 
-            if (toSum)
-            {
-                //合计供货总价
-                ws.Range[ws.Cells[curRow, 2], ws.Cells[curRow, 11]].Merge();
-                Range cell = ws.Cells[curRow, 2];
-                cell.Value = "合计";
-                cell.HorizontalAlignment = XlHAlign.xlHAlignCenter;
-                cell.RowHeight = 36;
+            //if (toSum)
+            //{
+            //    //合计供货总价
+            //    ws.Range[ws.Cells[curRow, 2], ws.Cells[curRow, 11]].Merge();
+            //    Range cell = ws.Cells[curRow, 2];
+            //    cell.Value = "合计";
+            //    cell.HorizontalAlignment = XlHAlign.xlHAlignCenter;
+            //    cell.RowHeight = 36;
 
-                if (curRow == 4)//worksheet是空的
-                    ws.Cells[curRow, 19] = 0;
-                else
-                    ws.Cells[curRow, 19] = string.Format("=SUM(S3:S{0})", curRow - 1);
+            //    if (curRow == 4)//worksheet是空的
+            //        ws.Cells[curRow, 19] = 0;
+            //    else
+            //        ws.Cells[curRow, 19] = string.Format("=SUM(S3:S{0})", curRow - 1);
 
-                Range cellRow = ws.Range[ws.Cells[curRow, 1], ws.Cells[curRow, 20]];
-                Borders borders = cellRow.Borders;
-                borders.LineStyle = XlLineStyle.xlDot;
-                borders.Weight = XlBorderWeight.xlHairline;
+            //    Range cellRow = ws.Range[ws.Cells[curRow, 1], ws.Cells[curRow, 20]];
+            //    Borders borders = cellRow.Borders;
+            //    borders.LineStyle = XlLineStyle.xlDot;
+            //    borders.Weight = XlBorderWeight.xlHairline;
 
-                borders[XlBordersIndex.xlEdgeBottom].LineStyle = XlLineStyle.xlContinuous;
-                borders[XlBordersIndex.xlEdgeBottom].Weight = XlBorderWeight.xlThin;
-                borders[XlBordersIndex.xlEdgeLeft].LineStyle = XlLineStyle.xlContinuous;
-                borders[XlBordersIndex.xlEdgeLeft].Weight = XlBorderWeight.xlThin;
-                borders[XlBordersIndex.xlEdgeRight].LineStyle = XlLineStyle.xlContinuous;
-                borders[XlBordersIndex.xlEdgeRight].Weight = XlBorderWeight.xlThin;
-            }
+            //    borders[XlBordersIndex.xlEdgeBottom].LineStyle = XlLineStyle.xlContinuous;
+            //    borders[XlBordersIndex.xlEdgeBottom].Weight = XlBorderWeight.xlThin;
+            //    borders[XlBordersIndex.xlEdgeLeft].LineStyle = XlLineStyle.xlContinuous;
+            //    borders[XlBordersIndex.xlEdgeLeft].Weight = XlBorderWeight.xlThin;
+            //    borders[XlBordersIndex.xlEdgeRight].LineStyle = XlLineStyle.xlContinuous;
+            //    borders[XlBordersIndex.xlEdgeRight].Weight = XlBorderWeight.xlThin;
+            //}
         }
 
         private void writeRow(Worksheet ws, int curRow, Material material)
@@ -1554,11 +1158,11 @@ namespace GouJiaApp
             else
                 ws.Cells[7][curRow] = string.Format("={0}", rule);
 
-            ////供货总价
-            //ws.Cells[12][curRow] = string.Format("=G{0}*J{0}", curRow);
+            //供货总价
+            ws.Cells[19][curRow] = string.Format("=G{0}*Q{0}", curRow);
 
-            ////销售总价
-            //ws.Cells[13][curRow] = string.Format("=G{0}*K{0}", curRow);
+            //销售总价
+            ws.Cells[20][curRow] = string.Format("=G{0}*R{0}", curRow);
 
             //技术参数
             ws.Cells[14][curRow] = material.color;
@@ -1659,26 +1263,21 @@ namespace GouJiaApp
             string name = (string)jObj["result"]["name"];
 
             //单位
-            string unit = null;
-            if (!JTokenIsNullOrEmpty(jObj["result"]["matterUnit"]))
-            {
-                unit = (string)jObj["result"]["matterUnit"]["unitName"];
-            }
+            string unit = (string)jObj["result"]["matterUnitName"];
 
             //图片
             string image = null;
 
-            if (!JTokenIsNullOrEmpty(jObj["result"]["image"]))
+            if (!JTokenIsNullOrEmpty(jObj["result"]["imagePath"]))
             {
-                string imageUrl = (string)jObj["result"]["image"]["path"];
-                string imgPath = "http://htmlstore.goujiawang.com/" + imageUrl;
+                string imgPath = (string)jObj["result"]["imagePath"];
 
                 string tempPath = Path.GetTempPath() + @"Goujia\";
 
                 if (!Directory.Exists(tempPath))
                     Directory.CreateDirectory(tempPath);
 
-                string imgLocalPath = tempPath + StrToMD5(imageUrl) + ".png";
+                string imgLocalPath = tempPath + StrToMD5(imgPath) + ".png";
                 image = imgLocalPath;
                 if (!File.Exists(imgLocalPath))
                 {
@@ -1706,7 +1305,7 @@ namespace GouJiaApp
             //销售价
             string salePrice = (string)jObj["result"]["displayPric"];
             //品牌
-            string brand = (string)jObj["result"]["brand"]["name"];
+            string brand = (string)jObj["result"]["brandName"];
 
             //型号
             string model = (string)jObj["result"]["model"];
@@ -1742,77 +1341,6 @@ namespace GouJiaApp
                     Q20kg_JBL.Add(checker, quantity);
                     break;
             }
-        }
-
-        private void writeRowManual(Worksheet ws, int curRow, string id, string rooms, string idiQuantity, string idiUnit, string name,
-                                string unit, string goujiaPrice, string salePrice, string brand, string model, string dimension, string q,
-                                string color, string remark, string imagePath)
-        {
-            ws.Rows[curRow].RowHeight = 110;
-
-            ws.Cells[1][curRow] = curRow - 2;
-            ws.Cells[2][curRow] = id;
-            ws.Cells[3][curRow] = rooms;
-            ws.Cells[4][curRow] = idiQuantity;
-            ws.Cells[5][curRow] = idiUnit;
-
-            //物料名称
-            ws.Cells[6][curRow] = name;
-
-            //单位
-            ws.Cells[8][curRow] = unit;
-            //if ("桶".Equals(material.unit))
-            //    ws.Cells[8][curRow].Interior.Color = System.Drawing.Color.FromArgb(255, 255, 0);
-
-            //供货价
-            ws.Cells[10][curRow] = goujiaPrice;
-
-            //销售价
-            ws.Cells[11][curRow] = salePrice;
-
-            //品牌
-            ws.Cells[14][curRow] = brand;
-
-            //型号
-            ws.Cells[15][curRow] = model;
-
-            //规格
-            ws.Cells[16][curRow] = dimension;
-
-            //数量
-            ws.Cells[7][curRow] = q;
-
-            //供货总价
-            ws.Cells[12][curRow] = string.Format("=G{0}*J{0}", curRow);
-
-            //销售总价
-            ws.Cells[13][curRow] = string.Format("=G{0}*K{0}", curRow);
-
-            //技术参数
-            ws.Cells[17][curRow] = color;
-
-            //备注
-            ws.Cells[18][curRow] = remark;
-
-            //ws.Rows[curRow].WrapText = true;
-
-            //参考图片
-            Range cell = ws.Cells[9][curRow];
-
-            ws.Shapes.AddPicture(imagePath, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 12, cell.Top + 5 + curRow * 0.45, 100, 100);
-            //ws.Shapes.AddPicture(imagePath, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 12, cell.Top + 5, 100, 100);
-
-            Range cellRow = ws.Range[ws.Cells[curRow, 1], ws.Cells[curRow, 18]];
-            Borders borders = cellRow.Borders;
-            borders.LineStyle = XlLineStyle.xlDot;
-            borders.Weight = XlBorderWeight.xlHairline;
-
-            borders[XlBordersIndex.xlEdgeBottom].LineStyle = XlLineStyle.xlContinuous;
-            borders[XlBordersIndex.xlEdgeBottom].Weight = XlBorderWeight.xlThin;
-            borders[XlBordersIndex.xlEdgeLeft].LineStyle = XlLineStyle.xlContinuous;
-            borders[XlBordersIndex.xlEdgeLeft].Weight = XlBorderWeight.xlThin;
-            borders[XlBordersIndex.xlEdgeRight].LineStyle = XlLineStyle.xlContinuous;
-            borders[XlBordersIndex.xlEdgeRight].Weight = XlBorderWeight.xlThin;
         }
 
 
@@ -1988,21 +1516,25 @@ namespace GouJiaApp
             cell.Value = "供货价";
             cell.ColumnWidth = 8;
             ws.Columns[17].HorizontalAlignment = XlHAlign.xlHAlignCenter;
+            ws.Columns[17].NumberFormat = "0.00";
 
             cell = ws.Cells[3, 18];
             cell.Value = "市场参考价";
             cell.ColumnWidth = 8;
             ws.Columns[18].HorizontalAlignment = XlHAlign.xlHAlignCenter;
+            ws.Columns[18].NumberFormat = "0.00";
 
             cell = ws.Cells[3, 19];
             cell.Value = "供货总价";
             cell.ColumnWidth = 8;
             ws.Columns[19].HorizontalAlignment = XlHAlign.xlHAlignCenter;
+            ws.Columns[19].NumberFormat = "0.00";
 
             cell = ws.Cells[3, 20];
             cell.Value = "市场参考总价";
             cell.ColumnWidth = 8;
             ws.Columns[20].HorizontalAlignment = XlHAlign.xlHAlignCenter;
+            ws.Columns[20].NumberFormat = "0.00";
         }
 
         private int slashCount(string str)
@@ -2067,7 +1599,11 @@ namespace GouJiaApp
         {
             if (name != null)
             {
-                if (name.Contains("瓷片") || name.Contains("墙砖") || name.Contains("抛釉砖"))
+                if ("WMF03-035-0015".Equals(id))
+                {
+                    return "ROUNDUP(Q*2.55/18,0)";
+                }
+                else if (name.Contains("瓷片") || name.Contains("墙砖") || name.Contains("抛釉砖"))
                 {
                     if (unit != null && unit.Contains("片"))
                     {
