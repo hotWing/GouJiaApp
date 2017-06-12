@@ -619,7 +619,7 @@ namespace GouJiaApp
                 //ws1.Shapes.AddPicture(temp, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, 30, 1, -1, -1);
                 ws1.Range[ws1.Cells[2, 1], ws1.Cells[2, 6]].Merge();
                 cell = ws1.Cells[2, 1];
-                cell.Value = "4S店项目销售订单编号：";
+                cell.Value = "GES订单编号：";
                 cell.Font.Bold = true;
                 cell.RowHeight = 20.25;
                 cell.Font.Size = 16;
@@ -635,7 +635,7 @@ namespace GouJiaApp
 
                 ws1.Range[ws1.Cells[4, 1], ws1.Cells[4, 3]].Merge();
                 cell = ws1.Cells[4, 1];
-                cell.Value = "产品包名称：";
+                cell.Value = "整家方案名称：";
                 cell.Font.Bold = true;
                 cell.RowHeight = 20.25;
                 cell.Font.Size = 16;
@@ -1107,7 +1107,6 @@ namespace GouJiaApp
             ws.Cells[13][curRow] = material.dimension;
 
             //数量
-
             string tempRule = getQuantityRules(material.name, material.unit, material.dimension, material.id, material.brand);
             string rule = null;
             if (tempRule.Contains("Q15D"))
@@ -1161,6 +1160,9 @@ namespace GouJiaApp
             else
                 ws.Cells[7][curRow] = string.Format("={0}", rule);
 
+            //实际下单数量
+            ws.Cells[8][curRow].Value2 = ws.Cells[7][curRow].Value2;
+
             //供货总价
             ws.Cells[19][curRow] = string.Format("=G{0}*Q{0}", curRow);
 
@@ -1184,8 +1186,8 @@ namespace GouJiaApp
                 //    cell.RowHeight = 110;
 
                 Image image = Image.FromFile(imgLocalPath);
-                //ws.Shapes.AddPicture(imgLocalPath, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 12, cell.Top + 5 + curRow * 0.45, 100, 100);
-                ws.Shapes.AddPicture(imgLocalPath, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 12, cell.Top + 5, 100, 100);
+                ws.Shapes.AddPicture(imgLocalPath, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 12, cell.Top + 5 + curRow * 0.45, 100, 100);
+                //ws.Shapes.AddPicture(imgLocalPath, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 12, cell.Top + 5, 100, 100);
 
                 cell.Value = "";
             }
@@ -1480,6 +1482,7 @@ namespace GouJiaApp
             cell.ColumnWidth = 6.38;
             ws.Columns[8].HorizontalAlignment = XlHAlign.xlHAlignCenter;
             cell.Interior.Color = System.Drawing.Color.FromArgb(255, 0, 0);
+            ws.Columns[8].NumberFormat = "0.00";
 
             cell = ws.Cells[3, 9];
             cell.Value = "单位";

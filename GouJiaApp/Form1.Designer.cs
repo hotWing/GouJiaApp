@@ -297,7 +297,7 @@
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(122, 21);
             this.label5.TabIndex = 31;
-            this.label5.Text = "2017.06.08版本";
+            this.label5.Text = "2017.06.15版本";
             // 
             // pictureBox1
             // 
