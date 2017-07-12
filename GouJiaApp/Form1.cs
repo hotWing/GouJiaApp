@@ -43,7 +43,7 @@ namespace GouJiaApp
 
         Dictionary<string, double> Q20kg_JBL;
 
-        double sum0015D, sum0019D, sum0023D,sum0026D, sum0028D, sum0030D, sum0032D, sum0034D, sum0036D, sum0039D, sum0041D, sum0043D, sum0045D, sum0047D, sum0049D,
+        double sum0015D, sum0019D, sum0023D, sum0026D, sum0028D, sum0030D, sum0032D, sum0034D, sum0036D, sum0039D, sum0041D, sum0043D, sum0045D, sum0047D, sum0049D,
             sum0053D, sum0058D = 0;
         private MD5 md5;
         public Form1()
@@ -149,7 +149,7 @@ namespace GouJiaApp
             temp = ("墙面漆、底漆、踢脚线、把手、顶线-封板").Split('、');
             hilightKeys.AddRange(temp);
 
-            
+
         }
 
         private void idiTextBox_Click(object sender, EventArgs e)
@@ -298,7 +298,7 @@ namespace GouJiaApp
                 initWorkSheet(ws3, "主材包物料清单");
                 initWorkSheet(ws4, "软装包物料清单");
                 initWorkSheet(ws5, "城运商自购物料清单");
-                initWorkSheet(ws6, "橱柜柜体物料清单");
+                initWorkSheet(ws6, "待定物料清单");
                 //initWorkSheet(ws7, "榻榻米物料清单");
                 //initWorkSheet(ws8, "衣帽柜物料清单");
                 //initWorkSheet(ws9, "待定物料清单");
@@ -335,9 +335,9 @@ namespace GouJiaApp
                 List<Material> materials4 = new List<Material>();
                 List<Material> materials5 = new List<Material>();
                 List<Material> materials6 = new List<Material>();
-                List<Material> materials7 = new List<Material>();
-                List<Material> materials8 = new List<Material>();
-                List<Material> materials9 = new List<Material>();
+                //List<Material> materials7 = new List<Material>();
+                //List<Material> materials8 = new List<Material>();
+                //List<Material> materials9 = new List<Material>();
 
                 foreach (string criteria in criterias)
                 {
@@ -417,7 +417,7 @@ namespace GouJiaApp
                         sum0053D = sum;
                     else if (criteria.Equals("WMZ19-014-0058"))
                         sum0058D = sum;
-                   
+
                     #endregion
 
                     int wsNum = 0;
@@ -500,6 +500,7 @@ namespace GouJiaApp
                         //数据库中没有查询到的编号
                         else
                         {
+                            wsNum = 6;
                             switch (wsNum)
                             {
                                 case 2:
@@ -517,15 +518,15 @@ namespace GouJiaApp
                                 case 6:
                                     addRowToListNoMatch(criteria, roomsSB.ToString(), sum, idiUnit, jObj, ref materials6);
                                     break;
-                                case 7:
-                                    addRowToListNoMatch(criteria, roomsSB.ToString(), sum, idiUnit, jObj, ref materials7);
-                                    break;
-                                case 8:
-                                    addRowToListNoMatch(criteria, roomsSB.ToString(), sum, idiUnit, jObj, ref materials8);
-                                    break;
-                                case 9:
-                                    addRowToListNoMatch(criteria, roomsSB.ToString(), sum, idiUnit, jObj, ref materials9);
-                                    break;
+                                //case 7:
+                                //    addRowToListNoMatch(criteria, roomsSB.ToString(), sum, idiUnit, jObj, ref materials7);
+                                //    break;
+                                //case 8:
+                                //    addRowToListNoMatch(criteria, roomsSB.ToString(), sum, idiUnit, jObj, ref materials8);
+                                //    break;
+                                //case 9:
+                                //    addRowToListNoMatch(criteria, roomsSB.ToString(), sum, idiUnit, jObj, ref materials9);
+                                //    break;
                             }
                         }
 
@@ -759,8 +760,8 @@ namespace GouJiaApp
                 ws1.Cells[12, 4] = "辅材包";
 
                 ws1.Range[ws1.Cells[12, 5], ws1.Cells[15, 5]].Merge();
-                ws1.Cells[12, 5] = string.Format("=SUM(辅材包!S{0}:辅材包!S{1})",4,ws2.UsedRange.Rows.Count);
-
+                //ws1.Cells[12, 5] = string.Format("=SUM(辅材包!S{0}:辅材包!S{1})", 4, ws2.UsedRange.Rows.Count);
+                ws1.Cells[12, 5] = 0;
                 //ws1.Range[ws1.Cells[7, 5], ws1.Cells[10, 5]].Merge();
                 //ws1.Range[ws1.Cells[7, 6], ws1.Cells[10, 6]].Merge();
                 //ws1.Range[ws1.Cells[7, 7], ws1.Cells[10, 7]].Merge();
@@ -805,7 +806,8 @@ namespace GouJiaApp
                 ws1.Cells[16, 4] = "主材包";
 
                 ws1.Range[ws1.Cells[16, 5], ws1.Cells[28, 5]].Merge();
-                ws1.Cells[16, 5] = string.Format("=SUM(主材包!S{0}:主材包!S{1})", 4, ws3.UsedRange.Rows.Count);
+                //ws1.Cells[16, 5] = string.Format("=SUM(主材包!S{0}:主材包!S{1})", 4, ws3.UsedRange.Rows.Count);
+                ws1.Cells[16, 5] = 0;
                 //ws1.Range[ws1.Cells[11, 5], ws1.Cells[23, 5]].Merge();
                 //ws1.Range[ws1.Cells[11, 6], ws1.Cells[23, 6]].Merge();
                 //ws1.Range[ws1.Cells[11, 7], ws1.Cells[23, 7]].Merge();
@@ -838,7 +840,8 @@ namespace GouJiaApp
                 ws1.Cells[29, 4] = "软装包";
 
                 ws1.Range[ws1.Cells[29, 5], ws1.Cells[33, 5]].Merge();
-                ws1.Cells[29, 5]= string.Format("=SUM(软装包!S{0}:软装包!S{1})", 4, ws4.UsedRange.Rows.Count);
+                //ws1.Cells[29, 5] = string.Format("=SUM(软装包!S{0}:软装包!S{1})", 4, ws4.UsedRange.Rows.Count);
+                ws1.Cells[29, 5] = 0;
                 //ws1.Range[ws1.Cells[24, 5], ws1.Cells[28, 5]].Merge();
                 //ws1.Range[ws1.Cells[24, 6], ws1.Cells[28, 6]].Merge();
                 //ws1.Range[ws1.Cells[24, 7], ws1.Cells[28, 7]].Merge();
@@ -868,7 +871,8 @@ namespace GouJiaApp
                 ws1.Cells[34, 4] = "城运商自购";
 
                 ws1.Range[ws1.Cells[34, 5], ws1.Cells[37, 5]].Merge();
-                ws1.Cells[34, 5] = string.Format("=SUM(城运商自购!S{0}:城运商自购!S{1})", 4, ws5.UsedRange.Rows.Count);
+                //ws1.Cells[34, 5] = string.Format("=SUM(城运商自购!S{0}:城运商自购!S{1})", 4, ws5.UsedRange.Rows.Count);
+                ws1.Cells[34, 5] = 0;
 
                 //物流费
                 ws1.Range[ws1.Cells[12, 6], ws1.Cells[33, 6]].Merge();
@@ -949,7 +953,7 @@ namespace GouJiaApp
 
                 #endregion
 
-                
+
                 ProgressBarController.setValue(progressBar, 0);
             }
             catch (Exception ex)
@@ -1078,7 +1082,7 @@ namespace GouJiaApp
                 {
                     if (material.name.Contains(key))
                     {
-                        Range celll = ws.Range[ws.Cells[curRow, 1], ws.Cells[curRow, 20]];
+                        Range celll = ws.Range[ws.Cells[curRow, 1], ws.Cells[curRow, 16]];
                         celll.Interior.Color = System.Drawing.Color.FromArgb(240, 240, 240);
                         break;
                     }
@@ -1091,11 +1095,11 @@ namespace GouJiaApp
             //if ("桶".Equals(material.unit))
             //    ws.Cells[8][curRow].Interior.Color = System.Drawing.Color.FromArgb(255, 255, 0);
 
-            //供货价
-            ws.Cells[17][curRow] = material.goujiaPrice;
+            ////供货价
+            //ws.Cells[17][curRow] = material.goujiaPrice;
 
-            //销售价
-            ws.Cells[18][curRow] = material.salePrice;
+            ////销售价
+            //ws.Cells[18][curRow] = material.salePrice;
 
             //品牌
             ws.Cells[11][curRow] = material.brand;
@@ -1151,8 +1155,8 @@ namespace GouJiaApp
             {
                 if ("WMF03-035-0015".Equals(material.id))
                     rule = string.Format("ROUNDUP({0}*2.55/18,0)", "D" + curRow);
-                else 
-                    rule = getVarnishRule("嘉宝莉", material.dimension, material.checker, material.idiQuantity);
+                else
+                    rule = getVarnishRule(material.name, "嘉宝莉", material.dimension, material.checker, material.idiQuantity);
             }
 
             if ("片".Equals(material.unit) || "卷".Equals(material.unit))
@@ -1163,11 +1167,11 @@ namespace GouJiaApp
             //实际下单数量
             ws.Cells[8][curRow].Value2 = ws.Cells[7][curRow].Value2;
 
-            //供货总价
-            ws.Cells[19][curRow] = string.Format("=G{0}*Q{0}", curRow);
+            ////供货总价
+            //ws.Cells[19][curRow] = string.Format("=G{0}*Q{0}", curRow);
 
-            //销售总价
-            ws.Cells[20][curRow] = string.Format("=G{0}*R{0}", curRow);
+            ////销售总价
+            //ws.Cells[20][curRow] = string.Format("=G{0}*R{0}", curRow);
 
             //技术参数
             ws.Cells[14][curRow] = material.color;
@@ -1186,8 +1190,8 @@ namespace GouJiaApp
                 //    cell.RowHeight = 110;
 
                 Image image = Image.FromFile(imgLocalPath);
-                ws.Shapes.AddPicture(imgLocalPath, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 12, cell.Top + 5 + curRow * 0.45, 100, 100);
-                //ws.Shapes.AddPicture(imgLocalPath, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 12, cell.Top + 5, 100, 100);
+                //ws.Shapes.AddPicture(imgLocalPath, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 12, cell.Top + 5 + curRow * 0.45, 100, 100);
+                ws.Shapes.AddPicture(imgLocalPath, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, cell.Left + 12, cell.Top + 5, 100, 100);
 
                 cell.Value = "";
             }
@@ -1202,7 +1206,7 @@ namespace GouJiaApp
                 cell.Interior.Color = System.Drawing.Color.FromArgb(255, 0, 0);
             }
 
-            Range cellRow = ws.Range[ws.Cells[curRow, 1], ws.Cells[curRow, 20]];
+            Range cellRow = ws.Range[ws.Cells[curRow, 1], ws.Cells[curRow, 16]];
             Borders borders = cellRow.Borders;
             borders.LineStyle = XlLineStyle.xlDot;
             borders.Weight = XlBorderWeight.xlHairline;
@@ -1215,7 +1219,7 @@ namespace GouJiaApp
             borders[XlBordersIndex.xlEdgeRight].Weight = XlBorderWeight.xlThin;
         }
 
-        private string getVarnishRule(string brand, string dimension, string checker, double idiQuantity)
+        private string getVarnishRule(string name, string brand, string dimension, string checker, double idiQuantity)
         {
             string formular1 = "IF(XXX*0.3-20*ROUNDDOWN(XXX*0.3/20,0)<12.8,ROUNDDOWN(XXX*0.3/20,0),ROUNDDOWN(XXX*0.3/20,0)+1)";
             string formular2 = "IF(XXX*0.4-20*ROUNDDOWN(XXX*0.4/20,0)<11,ROUNDDOWN(XXX*0.4/20,0),ROUNDDOWN(XXX*0.4/20,0)+1)";
@@ -1223,30 +1227,66 @@ namespace GouJiaApp
             string formular4 = "ROUNDUP(XXX*0.4/6.4,0)";
             string formular5 = "IF(YYY*0.4-20*ROUNDDOWN(YYY*0.4/20,0)=0,0,IF(YYY*0.4-20*ROUNDDOWN(YYY*0.4/20,0)<=5.5,1,IF(YYY*0.4-20*ROUNDDOWN(YYY*0.4/20,0)<=11,2,0)))";
             string formular6 = "ROUNDUP(XXX*0.4/5.5,0)";
+            string formular7 = "IF(XXX*0.4-20*ROUNDDOWN(XXX*0.4/20,0)<12.8,ROUNDDOWN(XXX*0.4/20,0),ROUNDDOWN(XXX*0.4/20,0)+1)";
 
+            string diqiFormular1 = "IF(X*0.15-20*ROUNDDOWN(X*0.15/20,0)<12.8,ROUNDDOWN(X*0.15/20,0),ROUNDDOWN(X*0.15/20,0)+1)";
+            string diqiFormular2 = "IF(X*0.15-20*ROUNDDOWN(X*0.15/20,0)=0,0,IF(X*0.15-20*ROUNDDOWN(X*0.15/20,0)<=6.4,1,IF(X*0.15-20*ROUNDDOWN(X*0.15/20,0)<=12.8,2,0)))";
             switch (brand)
             {
                 case "嘉宝莉":
-                    if (dimension.Contains("20KG"))
+                    if (string.IsNullOrEmpty(dimension))
                     {
-                        if(string.IsNullOrEmpty(checker))
-                            return formular1.Replace("XXX", idiQuantity.ToString());
-                        else
-                            return formular2.Replace("XXX", idiQuantity.ToString());
+                        return idiQuantity.ToString();
                     }
-                    else if (dimension.Contains("6.4KG"))
+                    else
                     {
-                        if (Q20kg_JBL.ContainsKey(checker))
-                            return formular3.Replace("YYY", Q20kg_JBL[checker].ToString());
-                        else
-                            return formular4.Replace("XXX",idiQuantity.ToString());
-                    }
-                    else if (dimension.Contains("5.5KG"))
-                    {
-                        if (Q20kg_JBL.ContainsKey(checker))
+                        if (dimension.Contains("20KG"))
+                        {
+                            if (!name.Contains("底漆"))
+                            {
+                                if (string.IsNullOrEmpty(checker))
+                                    return formular1.Replace("XXX", idiQuantity.ToString());
+                                else
+                                {
+                                    //if (checker.Contains("小桶6.4"))
+                                    //    return formular7.Replace("XXX", idiQuantity.ToString());
+                                    //else 
+                                    //    return formular2.Replace("XXX", idiQuantity.ToString());
+                                    if(checker.Contains("KRM3723"))
+                                        return formular7.Replace("XXX", idiQuantity.ToString());
+                                    else
+                                        return formular2.Replace("XXX", idiQuantity.ToString());
+                                }
+                            }
+                            else
+                            {
+                                return diqiFormular1.Replace("X", idiQuantity.ToString());
+                            }
+                        }
+                        else if (dimension.Contains("6.4KG"))
+                        {
+                            if (!name.Contains("底漆"))
+                            {
+                                if (Q20kg_JBL.ContainsKey(checker))
+                                    return formular3.Replace("YYY", Q20kg_JBL[checker].ToString());
+                                else
+                                    return formular4.Replace("XXX", idiQuantity.ToString());
+                            }
+                            else
+                            {
+                                if (Q20kg_JBL.ContainsKey(checker))
+                                    return diqiFormular2.Replace("X", Q20kg_JBL[checker].ToString());
+                                else
+                                    return diqiFormular1.Replace("X", idiQuantity.ToString());
+                            }
+                        }
+                        else if (dimension.Contains("5.5KG"))
+                        {
+                            if (Q20kg_JBL.ContainsKey(checker))
                                 return formular5.Replace("YYY", Q20kg_JBL[checker].ToString());
                             else
                                 return formular6.Replace("XXX", idiQuantity.ToString());
+                        }
                     }
                     break;
             }
@@ -1257,7 +1297,7 @@ namespace GouJiaApp
         private void addRowToListNoMatch(string criteria, string rooms, double sum, string idiUnit, JObject jObj, ref List<Material> materials)
         {
             Material material = new Material(criteria, rooms, sum, idiUnit, null, null, null,
-                null, null, null, null, null, null, null, null, -1,null);
+                null, null, null, null, null, null, null, null, -1, null);
             materials.Add(material);
         }
 
@@ -1385,12 +1425,12 @@ namespace GouJiaApp
             ws.Cells.Font.Size = 10;
             ws.Cells.WrapText = true;
 
-            Range cell = ws.Range[ws.Cells[1, 1], ws.Cells[1, 20]];
+            Range cell = ws.Range[ws.Cells[1, 1], ws.Cells[1, 16]];
             cell.Font.Bold = true;
             cell.WrapText = true;
             cell.HorizontalAlignment = XlHAlign.xlHAlignCenter;
 
-            cell = ws.Range[ws.Cells[3, 1], ws.Cells[3, 20]];
+            cell = ws.Range[ws.Cells[3, 1], ws.Cells[3, 16]];
             cell.Font.Bold = true;
             cell.WrapText = true;
             cell.HorizontalAlignment = XlHAlign.xlHAlignCenter;
@@ -1406,7 +1446,7 @@ namespace GouJiaApp
             ws.Rows[2].RowHeight = 54.95;
             ws.Rows[3].RowHeight = 36;
 
-            cell = ws.Range[ws.Cells[3, 1], ws.Cells[3, 20]];
+            cell = ws.Range[ws.Cells[3, 1], ws.Cells[3, 16]];
             cell.Font.Bold = true;
             Borders borders = cell.Borders;
             borders.LineStyle = XlLineStyle.xlDot;
@@ -1422,20 +1462,20 @@ namespace GouJiaApp
             cell.Interior.Color = System.Drawing.Color.FromArgb(192, 192, 192);
             cell.Font.Size = 12;
 
-            ws.Range[ws.Cells[1, 6], ws.Cells[1, 20]].Merge();
+            ws.Range[ws.Cells[1, 6], ws.Cells[1, 16]].Merge();
             cell = ws.Cells[1, 6];
             cell.Value = title;
             cell.Font.Name = "汉仪旗黑-70S";
             cell.Font.Size = 20;
             cell.Font.Bold = true;
 
-            ws.Range[ws.Cells[2, 1], ws.Cells[2, 20]].Merge();
+            ws.Range[ws.Cells[2, 1], ws.Cells[2, 16]].Merge();
             cell = ws.Cells[2, 1];
             cell.Value = "城运商填写说明：1、只能对“实际下单数量”“二次确认信息”两列单元格进行调整；\n　　　　　　　　 2、调整的信息以红色底色填充；";
             cell.Characters[9, 61].Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Red);
             cell.Characters[1, 8].Font.Bold = true;
             cell.Font.Size = 12;
-            cell = ws.Range[ws.Cells[2, 1], ws.Cells[2, 20]];
+            cell = ws.Range[ws.Cells[2, 1], ws.Cells[2, 16]];
             borders = cell.Borders;
             borders.LineStyle = XlLineStyle.xlContinuous;
             borders.Weight = XlBorderWeight.xlThin;
@@ -1518,29 +1558,29 @@ namespace GouJiaApp
             cell.Value = "二次确认信息";
             cell.ColumnWidth = 26;
 
-            cell = ws.Cells[3, 17];
-            cell.Value = "供货价";
-            cell.ColumnWidth = 8;
-            ws.Columns[17].HorizontalAlignment = XlHAlign.xlHAlignCenter;
-            ws.Columns[17].NumberFormat = "0.00";
+            //cell = ws.Cells[3, 17];
+            //cell.Value = "供货价";
+            //cell.ColumnWidth = 8;
+            //ws.Columns[17].HorizontalAlignment = XlHAlign.xlHAlignCenter;
+            //ws.Columns[17].NumberFormat = "0.00";
 
-            cell = ws.Cells[3, 18];
-            cell.Value = "市场参考价";
-            cell.ColumnWidth = 8;
-            ws.Columns[18].HorizontalAlignment = XlHAlign.xlHAlignCenter;
-            ws.Columns[18].NumberFormat = "0.00";
+            //cell = ws.Cells[3, 18];
+            //cell.Value = "市场参考价";
+            //cell.ColumnWidth = 8;
+            //ws.Columns[18].HorizontalAlignment = XlHAlign.xlHAlignCenter;
+            //ws.Columns[18].NumberFormat = "0.00";
 
-            cell = ws.Cells[3, 19];
-            cell.Value = "供货总价";
-            cell.ColumnWidth = 8;
-            ws.Columns[19].HorizontalAlignment = XlHAlign.xlHAlignCenter;
-            ws.Columns[19].NumberFormat = "0.00";
+            //cell = ws.Cells[3, 19];
+            //cell.Value = "供货总价";
+            //cell.ColumnWidth = 8;
+            //ws.Columns[19].HorizontalAlignment = XlHAlign.xlHAlignCenter;
+            //ws.Columns[19].NumberFormat = "0.00";
 
-            cell = ws.Cells[3, 20];
-            cell.Value = "市场参考总价";
-            cell.ColumnWidth = 8;
-            ws.Columns[20].HorizontalAlignment = XlHAlign.xlHAlignCenter;
-            ws.Columns[20].NumberFormat = "0.00";
+            //cell = ws.Cells[3, 20];
+            //cell.Value = "市场参考总价";
+            //cell.ColumnWidth = 8;
+            //ws.Columns[20].HorizontalAlignment = XlHAlign.xlHAlignCenter;
+            //ws.Columns[20].NumberFormat = "0.00";
         }
 
         private int slashCount(string str)
@@ -1828,64 +1868,64 @@ namespace GouJiaApp
                         }
                         //else if (brand.Equals("嘉宝莉"))
                         //{
-                            //if (size.Contains("20KG"))
-                            //{
-                            //    return "IF(Q*0.4-20*ROUNDDOWN(Q*0.4/20,0)<12.8,ROUNDDOWN(Q*0.4/20,0),ROUNDDOWN(Q*0.4/20,0)+1)";
-                            //}
+                        //if (size.Contains("20KG"))
+                        //{
+                        //    return "IF(Q*0.4-20*ROUNDDOWN(Q*0.4/20,0)<12.8,ROUNDDOWN(Q*0.4/20,0),ROUNDDOWN(Q*0.4/20,0)+1)";
+                        //}
 
                             //else if (size.Contains("6.4KG"))
-                            //{
+                        //{
 
                             //    //if (id.Equals("WMZ19-035-0057"))
-                            //    //    return RuleSub("嘉宝莉", "Q36");
-                            //    //else if (id.Equals("WMZ19-035-0058"))
-                            //    //    return RuleSub("嘉宝莉", "Q44");
-                            //    //else if (id.Equals("WMZ19-035-0059"))
-                            //    //    return RuleSub("嘉宝莉", "Q45");
-                            //    //else if (id.Equals("WMZ19-035-0060"))
-                            //    //    return RuleSub("嘉宝莉", "Q46");
-                            //    //else if (id.Equals("WMZ19-035-0061"))
-                            //    //    return RuleSub("嘉宝莉", "Q47");
-                            //    //else if (id.Equals("WMZ19-035-0062"))
-                            //    //    return RuleSub("嘉宝莉", "Q48");
-                            //    //else if (id.Equals("WMZ19-035-0063"))
-                            //    //    return RuleSub("嘉宝莉", "Q49");
-                            //    //else if (id.Equals("WMZ19-035-0064"))
-                            //    //    return RuleSub("嘉宝莉", "Q50");
-                            //    //else if (id.Equals("WMZ19-035-0065"))
-                            //    //    return RuleSub("嘉宝莉", "Q51");
-                            //    //else if (id.Equals("WMZ19-035-0066"))
-                            //    //    return RuleSub("嘉宝莉", "Q52");
-                            //    //else if (id.Equals("WMZ19-035-0067"))
-                            //    //    return RuleSub("嘉宝莉", "Q53");
-                            //    //else if (id.Equals("WMZ19-035-0068"))
-                            //    //    return RuleSub("嘉宝莉", "Q54");
-                            //    //else if (id.Equals("WMZ19-035-0069"))
-                            //    //    return RuleSub("嘉宝莉", "Q55");
-                            //    //else if (id.Equals("WMZ19-035-0070"))
-                            //    //    return RuleSub("嘉宝莉", "Q56");
-                            //    //else if (id.Equals("WMZ19-035-0071"))
-                            //    //    return RuleSub("嘉宝莉", "Q72");
-                            //    //else if (id.Equals("WMZ19-035-0073"))
-                            //    //    return RuleSub("嘉宝莉", "Q74");
+                        //    //    return RuleSub("嘉宝莉", "Q36");
+                        //    //else if (id.Equals("WMZ19-035-0058"))
+                        //    //    return RuleSub("嘉宝莉", "Q44");
+                        //    //else if (id.Equals("WMZ19-035-0059"))
+                        //    //    return RuleSub("嘉宝莉", "Q45");
+                        //    //else if (id.Equals("WMZ19-035-0060"))
+                        //    //    return RuleSub("嘉宝莉", "Q46");
+                        //    //else if (id.Equals("WMZ19-035-0061"))
+                        //    //    return RuleSub("嘉宝莉", "Q47");
+                        //    //else if (id.Equals("WMZ19-035-0062"))
+                        //    //    return RuleSub("嘉宝莉", "Q48");
+                        //    //else if (id.Equals("WMZ19-035-0063"))
+                        //    //    return RuleSub("嘉宝莉", "Q49");
+                        //    //else if (id.Equals("WMZ19-035-0064"))
+                        //    //    return RuleSub("嘉宝莉", "Q50");
+                        //    //else if (id.Equals("WMZ19-035-0065"))
+                        //    //    return RuleSub("嘉宝莉", "Q51");
+                        //    //else if (id.Equals("WMZ19-035-0066"))
+                        //    //    return RuleSub("嘉宝莉", "Q52");
+                        //    //else if (id.Equals("WMZ19-035-0067"))
+                        //    //    return RuleSub("嘉宝莉", "Q53");
+                        //    //else if (id.Equals("WMZ19-035-0068"))
+                        //    //    return RuleSub("嘉宝莉", "Q54");
+                        //    //else if (id.Equals("WMZ19-035-0069"))
+                        //    //    return RuleSub("嘉宝莉", "Q55");
+                        //    //else if (id.Equals("WMZ19-035-0070"))
+                        //    //    return RuleSub("嘉宝莉", "Q56");
+                        //    //else if (id.Equals("WMZ19-035-0071"))
+                        //    //    return RuleSub("嘉宝莉", "Q72");
+                        //    //else if (id.Equals("WMZ19-035-0073"))
+                        //    //    return RuleSub("嘉宝莉", "Q74");
 
                             //    //else if (id.Equals("WMZ19-035-0103"))
-                            //    //    return RuleSub("嘉宝莉", "Q100");
-                            //    //else if (id.Equals("WMZ19-035-0104"))
-                            //    //    return RuleSub("嘉宝莉", "Q101");
-                            //    //else if (id.Equals("WMZ19-035-0105"))
-                            //    //    return RuleSub("嘉宝莉", "Q102");
-                            //    //else if (id.Equals("WMZ19-035-0107"))
-                            //    //    return RuleSub("嘉宝莉", "Q106");
-                            //    //else if (id.Equals("WMZ19-035-0109"))
-                            //    //    return RuleSub("嘉宝莉", "Q108");
+                        //    //    return RuleSub("嘉宝莉", "Q100");
+                        //    //else if (id.Equals("WMZ19-035-0104"))
+                        //    //    return RuleSub("嘉宝莉", "Q101");
+                        //    //else if (id.Equals("WMZ19-035-0105"))
+                        //    //    return RuleSub("嘉宝莉", "Q102");
+                        //    //else if (id.Equals("WMZ19-035-0107"))
+                        //    //    return RuleSub("嘉宝莉", "Q106");
+                        //    //else if (id.Equals("WMZ19-035-0109"))
+                        //    //    return RuleSub("嘉宝莉", "Q108");
 
                             //    //else
-                            //    //    return "Q";
-                            //}
+                        //    //    return "Q";
+                        //}
 
                             //else
-                            //    return "Q";
+                        //    return "Q";
                         //}
                         else
                             return "Q";
@@ -2084,5 +2124,5 @@ namespace GouJiaApp
             return OutString.ToLower();
         }
     }
-    
+
 }
