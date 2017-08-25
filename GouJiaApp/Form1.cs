@@ -45,12 +45,12 @@ namespace GouJiaApp
 
         double sum0015D, sum0019D, sum0023D, sum0026D, sum0028D, sum0030D, sum0032D, sum0034D, sum0036D, sum0039D, sum0041D, sum0043D, sum0045D, sum0047D, sum0049D,
             sum0053D, sum0058D = 0;
-        private MD5 md5;
+        //private MD5 md5;
         public Form1()
         {
             InitializeComponent();
 
-            md5 = new MD5CryptoServiceProvider();
+            //md5 = new MD5CryptoServiceProvider();
 
             fucaiKeys = new List<string>();
             //string[] temp = "地漏、瓷砖、乳胶漆、中央空调、地暖、给排水管、强弱电线管、木工材料、木工板材、石膏板".Split('、');
